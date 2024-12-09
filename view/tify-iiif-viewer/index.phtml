@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/tify@0.31.0/dist/tify.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tify@0.31.0/dist/tify.css">
+    <style type="text/css">
+    <?php echo $tifyConfig['tifyContainerStyles']; ?>
+    </style>
+</head>
+<body>
+    <?php $a = 0; ?>
+    <div id="tify"></div>
+    <script type="text/javascript">
+    const tify = new Tify({
+        container: '#tify',
+        manifestUrl: "<?php echo $tifyConfig['manifestUrl']; ?>",
+        pageLabelFormat: 'P',
+        urlQueryKey: 'tify',
+    })
+    </script>
+</body>
+</html>
