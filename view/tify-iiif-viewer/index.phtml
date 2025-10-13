@@ -1,8 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/tify@0.32.0/dist/tify.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tify@0.32.0/dist/tify.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tify@0.34.4/dist/tify.css">
     <style type="text/css">
     <?php echo $tifyConfig['tifyContainerStyles']; ?>
     </style>
@@ -10,13 +9,14 @@
 <body>
     <?php $a = 0; ?>
     <div id="tify"></div>
-    <script type="text/javascript">
-    const tify = new Tify({
-        container: '#tify',
-        manifestUrl: "<?php echo $tifyConfig['manifestUrl']; ?>",
-        pageLabelFormat: 'P',
-        urlQueryKey: 'tify',
-    })
+    <script type="module">
+        import 'https://cdn.jsdelivr.net/npm/tify@0.34.4/dist/tify.js'
+        const tify = new Tify({
+            container: '#tify',
+            manifestUrl: "<?php echo $tifyConfig['manifestUrl']; ?>",
+            pageLabelFormat: 'P',
+            urlQueryKey: 'tify',
+        })
     </script>
 </body>
 </html>
