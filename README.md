@@ -32,3 +32,19 @@ Then install via the Omeka S admin panel under **Modules**.
 ## Configuration
 
 After installation, go to **Modules** → **Tify** → **Configure** to customize viewer settings.
+
+### Full text fonts
+
+Readers can switch the font of the **Full text** tab with a **Select Font** dropdown at the top of the panel. Only the transcribed text changes; the rest of the viewer keeps its font. The choice is remembered in the reader's browser.
+
+The available fonts are set in **Full text fonts**, one per line:
+
+```
+Label | CSS font-family | URL
+```
+
+- **Label** is shown in the dropdown. The first line is the default font.
+- **CSS font-family** is applied to the text, e.g. `'Noto Serif Malayalam', serif`.
+- **URL** (optional) is either a stylesheet that defines the font, such as a Google Fonts link, or a font file (`.woff2`, `.woff`, `.ttf`, `.otf`), for which an `@font-face` rule is generated. It may be absolute or start with `/` for a file on the same site.
+
+With fewer than two lines, no dropdown is shown. The default list offers Manjari and Noto Serif Malayalam from Google Fonts.

@@ -1,10 +1,64 @@
+<?php
+$escapeAttr = $this->plugin('escapeHtmlAttr');
+$textFonts = $tifyConfig['textFonts'] ?? [];
+// The switcher only makes sense with a choice to make.
+$hasFontSwitcher = count($textFonts) > 1;
+?>
 <!doctype html>
 <html>
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tify@0.34.4/dist/tify.css">
+    <?php foreach ($textFonts as $font): ?>
+    <?php if ($font['url'] !== '' && empty($font['face'])): ?>
+    <link rel="stylesheet" href="<?php echo $escapeAttr($font['url']); ?>">
+    <?php endif; ?>
+    <?php endforeach; ?>
     <style type="text/css">
     <?php echo $tifyConfig['tifyContainerStyles']; ?>
     </style>
+    <?php if ($hasFontSwitcher): ?>
+    <style type="text/css">
+    <?php foreach ($textFonts as $font): ?>
+    <?php if (!empty($font['face'])): ?>
+    /* Font file configured directly, rather than through a stylesheet. */
+    @font-face {
+        font-family: '<?php echo $font['face']['name']; ?>';
+        src: url('<?php echo $font['url']; ?>') format('<?php echo $font['face']['format']; ?>');
+        font-display: swap;
+    }
+    <?php endif; ?>
+    <?php endforeach; ?>
+    /* Full text font switcher. The panel is .tify-text in Tify 0.33+ and
+       .tify-fulltext before. After the container styles, and more specific,
+       so the reader's choice wins over any font set there. */
+    #tify .tify-text,
+    #tify .tify-fulltext {
+        font-family: var(--tify-text-font);
+    }
+    .tify-text-font {
+        position: sticky;
+        top: calc(var(--tify-grid-base, 1.5em) * -.5);
+        z-index: 1;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: .5em;
+        margin: calc(var(--tify-grid-base, 1.5em) * -.5) calc(var(--tify-grid-base, 1.5em) * -.5) calc(var(--tify-grid-base, 1.5em) * .5);
+        padding: calc(var(--tify-grid-base, 1.5em) * .25) calc(var(--tify-grid-base, 1.5em) * .5);
+        background: var(--tify-bg-color, #fff);
+        border-bottom: 1px solid var(--tify-border-color, rgba(0, 0, 0, .15));
+        font-size: var(--tify-font-size-small, max(.75em, 12px));
+    }
+    .tify-text-font select {
+        font: inherit;
+        color: inherit;
+        background: var(--tify-button-bg, transparent);
+        border: 1px solid var(--tify-border-color, rgba(0, 0, 0, .15));
+        border-radius: var(--tify-border-radius, 2px);
+        padding: .15em .35em;
+    }
+    </style>
+    <?php endif; ?>
 </head>
 <body>
     <?php $a = 0; ?>
@@ -18,5 +72,80 @@
             urlQueryKey: 'tify',
         })
     </script>
+    <?php if ($hasFontSwitcher): ?>
+    <script>
+    (function () {
+        // Full text font switcher: a dropdown at the top of the Full text tab.
+        var fonts = <?php echo json_encode(array_values($textFonts), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;
+        var storageKey = 'tify-text-font';
+        var root = document.documentElement;
+        var current = 0;
+
+        // Per-reader convenience only; storage may be unavailable.
+        try {
+            var saved = window.localStorage.getItem(storageKey);
+            fonts.forEach(function (font, i) {
+                if (font.label === saved) {
+                    current = i;
+                }
+            });
+        } catch (e) {}
+
+        function apply(index) {
+            current = index;
+            root.style.setProperty('--tify-text-font', fonts[index].family);
+            document.querySelectorAll('.tify-text-font select').forEach(function (select) {
+                select.value = String(index);
+            });
+        }
+
+        function build() {
+            var wrap = document.createElement('div');
+            wrap.className = 'tify-text-font';
+
+            var label = document.createElement('label');
+            label.textContent = 'Select Font';
+            var select = document.createElement('select');
+            select.id = 'tify-text-font-select';
+            label.htmlFor = select.id;
+
+            fonts.forEach(function (font, i) {
+                var option = document.createElement('option');
+                option.value = String(i);
+                option.textContent = font.label;
+                select.appendChild(option);
+            });
+            select.value = String(current);
+            select.addEventListener('change', function () {
+                apply(Number(select.value));
+                try {
+                    window.localStorage.setItem(storageKey, fonts[current].label);
+                } catch (e) {}
+            });
+
+            wrap.appendChild(label);
+            wrap.appendChild(select);
+            return wrap;
+        }
+
+        // Tify (Vue) renders the Full text panel only once it is shown, and
+        // may recreate it, so (re)attach whenever it appears.
+        function mount() {
+            document.querySelectorAll('#tify .tify-text, #tify .tify-fulltext').forEach(function (panel) {
+                if (!panel.querySelector(':scope > .tify-text-font')) {
+                    panel.insertBefore(build(), panel.firstChild);
+                }
+            });
+        }
+
+        apply(current);
+        mount();
+        new MutationObserver(mount).observe(document.getElementById('tify'), {
+            childList: true,
+            subtree: true,
+        });
+    })();
+    </script>
+    <?php endif; ?>
 </body>
 </html>
