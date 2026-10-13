@@ -33,6 +33,18 @@ class ConfigForm extends Form
                     'rows' => 10,
                 ],
             ])
+            ->add([
+                'type' => Element\Textarea::class,
+                'name' => 'tify_text_fonts',
+                'options' => [
+                    'label' => 'Full text fonts',
+                    'info' => 'Fonts readers can switch between in the Full text tab, one per line: Label | CSS font-family | URL (optional). The URL may be a stylesheet (e.g. Google Fonts) or a font file (.woff2, .woff, .ttf, .otf), absolute or starting with "/". The first line is the default. With fewer than two lines no switcher is shown.',
+                ],
+                'attributes' => [
+                    'id' => 'tify_text_fonts',
+                    'rows' => 4,
+                ],
+            ])
             ;
     }
 }

@@ -18,6 +18,16 @@ return [
         'config' => [
             'tify_viewer_style' => 'width: 100%; aspect-ratio: 1/1;',
             'tify_container_styles' => "#tify {\nwidth: 100%;\nheight: 97vh;\n}",
+            // Fonts readers can pick for the Full text tab, one per line:
+            // Label | CSS font-family | URL (optional) of a stylesheet or of a
+            // font file (.woff2/.woff/.ttf/.otf). The first line is the
+            // default; with fewer than two, no switcher is shown.
+            'tify_text_fonts' => "Manjari | 'Manjari', sans-serif | https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap\n"
+                . "Noto Serif Malayalam | 'Noto Serif Malayalam', serif | https://fonts.googleapis.com/css2?family=Noto+Serif+Malayalam:wght@400;700&display=swap\n"
+                // Thumba by C-DIT, Government of Kerala, from
+                // kerala.gov.in/assets/malayalamfonts. Bundled because that
+                // site's bot check blocks cross-site font requests.
+                . "Thumba | 'Thumba', sans-serif | /modules/Tify/asset/fonts/THUMBA.ttf",
         ],
     ],
 
