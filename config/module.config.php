@@ -23,7 +23,11 @@ return [
             // font file (.woff2/.woff/.ttf/.otf). The first line is the
             // default; with fewer than two, no switcher is shown.
             'tify_text_fonts' => "Manjari | 'Manjari', sans-serif | https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap\n"
-                . "Noto Serif Malayalam | 'Noto Serif Malayalam', serif | https://fonts.googleapis.com/css2?family=Noto+Serif+Malayalam:wght@400;700&display=swap",
+                . "Noto Serif Malayalam | 'Noto Serif Malayalam', serif | https://fonts.googleapis.com/css2?family=Noto+Serif+Malayalam:wght@400;700&display=swap\n"
+                // Thumba by C-DIT, Government of Kerala, from
+                // kerala.gov.in/assets/malayalamfonts. Bundled because that
+                // site's bot check blocks cross-site font requests.
+                . "Thumba | 'Thumba', sans-serif | /modules/Tify/asset/fonts/THUMBA.ttf",
         ],
     ],
 
